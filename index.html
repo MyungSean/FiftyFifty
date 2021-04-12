@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>타이틀 뭐로 정해야될지 모르겠다</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+
+</head>
+<body>
+    
+    <!-- 시작 화면 -->
+    <div class="area intro_area">
+        <div class="intro_wrapper">
+            <div class="title_div">
+                <h1>Fifty Fifty</h1>
+            </div>
+            <div class="handling_div">
+                <div class="startGameBtn" id="startBtn">start</div>
+                <div class="showListBtn">리스트 보기</div>
+                <div class="startGameBtn" id="matchBtn">친구와 매치</div>
+    
+                <div class="shareSite">
+                    <p>친구에게 공유하기</p>
+                    <button>
+                        <img src="img/kakao_icon.jpg" alt="카카오톡으로 공유">
+                    </button>
+                    <button>
+                        <img src="img/facebook_icon.jpg" alt="페이스북으로 공유">
+                    </button>
+                    <button>
+                        <img src="img/share_icon.jpg" alt="링크로 공유">
+                    </button>
+                    <button class="otherShareBtn">
+                        <img src="img/other_icon.jpg" alt="기타 방법으로 공유">
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- <a href="javascript:;" id="kakao-link-btn">
+        <img src="//developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_small.png" width="100px" />
+    </a> -->
+    
+    <!-- 게임 진행 -->
+    <div class="area game_area">
+        <div class="queWrap">
+            <!-- 질문 -->
+            <h2></h2> 
+            
+            <!-- 정보 -->
+            <span class="viewsBox">조회수: <span class="views"></span></span>
+            <span class="report">신고</span>
+            <span><span id="currQue">1</span>/<span id="totQue">2</span></span>
+            <span id="queCnt">0</span>
+    
+            <!-- 답변 -->
+            <div class="ansWrap">
+                <span class="ans ans1"></span>
+                <span class="ans ans2"></span>
+            </div>
+        </div>
+
+        <!-- 버튼 -->
+        <div class="nextStepWrap">
+            <div class="nextStepBtn nextQueBtn" id="skipBtn">건너뛰기</div>
+            <div class="nextStepBtn nextQueBtn" id="confirmBtn">다음 질문</div>
+            <div class="nextStepBtn" id="showResultBtn">결과 보기</div>
+        </div>
+    </div>
+
+
+    <!-- 결과 -->
+    <div class="area result_area">
+        <p><span id="userName"></span>님의 대중도는 <span id="avgPercent"></span>% 입니다.</p>
+        <p class="conformityWrap"><span id="targetName"></span>님과 당신의 일치도는 <span id="conformity"></span>% 입니다.</p>
+        <table id="resultTable"></table>
+
+        <div class="shareContent">
+            <input type="text" id="shareUrl">
+            <input type="text" id="shareDescription">
+        </div>
+
+        <div>
+            <p>친구와 나는 얼마나 일치할까요?</p>
+            <p>공유해서 확인하기</p>
+            <div class="shareBtn">
+                <a href="javascript:;" id="kakao-share-btn">
+                    <img src="https://d2k6w3n3qf94c4.cloudfront.net/static/common/img/SNS/kakao.7f0f47e99a41.svg" width="100px" />
+                    <span>카카오톡 공유</span>
+                </a>
+            </div>
+            <div class="shareBtn" id="copyBtn">
+                <i class="fas fa-link"></i>
+                <span>링크 복사하기</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 질문 리스트 -->
+    <div class="area list_area">
+        <div class="header list_header">
+            <div id="searchQue">
+                <form>
+                    <select id="">
+                        <option value="que">질문</option>
+                        <option value="ans">답변</option>
+                    </select>
+                    <input type="text" id="">
+                    <i class="fas fa-search" id="searchQueBtn"></i>
+                </form>
+            </div>
+            <i class="fas fa-plus" id="addQueBtn"></i>
+            <i class="fas fa-times closeListBtn"></i>
+        </div>
+        <ul id="queList"></ul>
+    </div>
+
+
+
+    <!-- 질문 추가 모달 -->
+    <div class="modal" id="addQueModal">
+        <div class="modal-content">
+            <form id="addQueForm">
+                <input type="text" id="newQue" placeholder="탕수육은?">
+                <input type="text" id="newAns1" placeholder="부먹">
+                <input type="text" id="newAns2" placeholder="찍먹">
+                <button id="newQueSubmitBtn">submit</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- 이름 입력 모달 -->
+    <div class="modal" id="putNameModal">
+        <div class="modal-content">
+            <p>결과 확인을 위해 이름을 입력해주세요.</p>
+            <form>
+                <input type="text">
+                <button id="nameSubmitBtn">확인</button>
+            </form>
+        </div>
+    </div>
+
+
+
+    <!-- Jquery -->
+    <script src="https://code.jquery.com/jquery-latest.js"></script>
+    
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-database.js"></script>
+    <script src="js/firebase.js"></script>
+
+    <!-- 카카오 API -->
+    <script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
+    <script type="text/javascript">
+        Kakao.init('7ff0bc3b307b18807397be4055e1d1b1');
+
+        // Kakao.Link.createDefaultButton({
+        // container: '#kakao-link-btn',
+        // objectType: 'feed',
+        // content: {
+        //     title: document.title,
+        //     description: '내용, 주로 해시태그',
+        //     imageUrl: document.images[0].src,
+        //     link: {
+        //     webUrl: document.location.href,
+        //     mobileWebUrl: document.location.href
+        //     }
+        // },
+        // buttons: [
+        //     {
+        //     title: 'Open!',
+        //     link: {
+        //         mobileWebUrl: document.location.href,
+        //         webUrl: document.location.href
+        //     }
+        //     }  
+        // ]
+        // });
+    </script>
+
+    <script src="js/main.js"></script>
+    
+
+</body>
+</html>

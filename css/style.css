@@ -1,0 +1,257 @@
+:root {
+    --header-height: 50px;
+}
+
+* {
+    box-sizing: border-box;
+}
+html, body {
+    margin: 0;
+}
+
+.report {
+    color: #e91f18;
+    cursor: pointer;
+    text-decoration: underline;
+}
+.report.disable {
+    color: rgb(151, 151, 151);
+}
+
+
+/* 페이지 헤더 */
+.header {
+    width: 100vw;
+    height: var(--header-height);
+    border: 1px solid #2929ff;
+}
+
+.header i {
+    font-size: calc(var(--header-height) - 20px);
+}
+
+
+
+/* 인트로 화면 */
+.intro_wrapper {
+    text-align: center;
+    display: flex;
+    flex-flow: column;
+    height: 100vh;
+}
+
+.title_div {
+    flex-grow: 1;
+}
+
+.handling_div {
+    padding: 40px;
+}
+
+.shareSite button {
+    border: none;
+    background-color: transparent;
+    padding: 2px;
+}
+.shareSite img {
+    width: 50px;
+    border-radius: 50%;
+}
+/* .shareSite .otherShareBtn {
+    display: none;
+} */
+
+.startGameBtn {
+  border: 1px solid #000;  
+  padding: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+#matchBtn {
+    display: none;
+}
+
+
+
+
+/* 게임 진행 */
+.game_area {
+    display: none;
+    text-align: center;
+}
+.game_area .ansWrap {
+    display: flex;
+    flex-flow: row nowrap;
+    border-radius: 1em;
+    overflow: hidden;
+}
+.game_area .ans {
+    padding: 15px;
+    transition: .2s;
+    cursor: pointer;
+}
+.game_area .ans1 {
+    background-color: #8ad4ff;
+    flex-grow: 0;
+    flex-basis: 50%;
+}
+.game_area .ans2 {
+    flex-grow: 1;
+    background-color: #ffda8a;
+}
+.game_area .ans:hover {
+    background-color: rgb(163, 163, 163);
+}
+
+/* 다음 단계 버튼 */
+.nextStepWrap {
+    position: relative;
+}
+.nextStepBtn {
+    border: 1px solid #000;
+    position: absolute;
+    padding: 5px;
+    width: 100%;
+    cursor: pointer;
+    background-color: #fff;
+}
+#confirmBtn,
+#showResultBtn {
+    display: none;
+}
+
+
+
+
+/* 결과 화면 */
+.result_area {
+    display: none;
+}
+.result_area table,
+.result_area td {
+    border: 1px solid #000;
+    border-collapse: collapse;
+}
+
+/* 일치도 */
+.conformityWrap {
+    display: none;
+}
+
+
+
+/* 질문 리스트 */
+.list_area {
+    display: none;
+}
+
+.list_header div {
+    display: inline-block;
+}
+
+#queList {
+    list-style: none;
+    padding: 0;
+    text-align: center;
+}
+
+#queList li {
+    border: 1px solid #ff0000;
+    position: relative;
+    display: flex;
+    flex-flow: column;
+}
+
+#queList .que {
+    padding: 10px;
+}
+
+#queList .ansWrap {
+    display: flex;
+    flex-flow: row nowrap;
+    border-radius: 1em;
+    overflow: hidden;
+}
+#queList .ans {
+    padding: 5px;
+    transition: .2s;
+    cursor: pointer;
+}
+#queList .ans1 {
+    background-color: #8ad4ff;
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: 50%;
+}
+#queList .ans2 {
+    flex-grow: 1;
+    background-color: #ffda8a;
+}
+/* #queList .ans:hover {
+    background-color: rgb(163, 163, 163);
+} */
+#queList .viewsBox {
+    position: absolute;;
+    left: 5px;
+    top: 5px;
+    color: gray;
+    font-size: 10px;
+}
+#queList .report {
+    margin-left: 5px;
+}
+
+
+
+
+/* 모달 */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 80%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s
+}
+
+/* 모달 애니메이션 */
+@-webkit-keyframes animatetop {
+    from {top:-300px; opacity:0} 
+    to {top:0; opacity:1}
+}
+
+@keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+}
+
+
+/* 질문 추가 모달 */
+#addQueModal {
+    /* display: block; */
+}
+
+/* 이름 입력 모달 */
+/* #putNameModal {
+} */
