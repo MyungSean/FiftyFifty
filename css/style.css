@@ -134,6 +134,11 @@ html, body {
     border-collapse: collapse;
 }
 
+#resultTable .choosed {
+    background-color: #fff2b7;
+}
+
+
 /* 일치도 */
 .conformityWrap {
     display: none;
@@ -224,8 +229,9 @@ html, body {
 .modal-content {
     position: relative;
     background-color: #fefefe;
+    border-radius: 8px;
     margin: auto;
-    padding: 0;
+    padding: 20px;
     border: 1px solid #888;
     width: 80%;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
@@ -244,6 +250,16 @@ html, body {
 @keyframes animatetop {
     from {top:-300px; opacity:0}
     to {top:0; opacity:1}
+}
+
+.modal-content button {
+    /* display: block; */
+    margin-left: auto;
+    margin-right: 0;
+}
+
+.modal-content input {
+    margin-bottom: 5px;
 }
 
 

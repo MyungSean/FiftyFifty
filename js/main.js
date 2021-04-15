@@ -1,4 +1,5 @@
-
+// toggleAddQueModal("show");
+// togglePutNameModal("show");
 
 // url에서 index.html 없애기
 var link = window.location.href;
@@ -169,9 +170,8 @@ function report(id) {
 }
 
 
-
 // 질문 리스트 받아오기, 답변 클릭 이벤트
-database.ref( 'questions' ).orderByChild('views').once('value').then(function(snapshot) {
+database.ref( 'questions' ).orderByChild('views').limitToLast(15).once('value').then(function(snapshot) {
 
     snapshot.forEach(function (childSnapshot) {
 
@@ -244,6 +244,20 @@ $('.closeListBtn').click(function() {
     moveTo("intro");
 })
 
+
+//스크롤이 맨 끝에 내려왔을때 리스트 추가 로드
+$(window).scroll(function() {
+    var scrolltop = $(window).scrollTop(); 
+
+    // 페이지 끝까지 내려 왔을 떄
+    if( scrolltop == $(document).height() - $(window).height() ){
+
+        if ( history.state == "list" ) {
+            console.log("리스트 추가 로드 실행");
+        }
+
+    }
+});
 
 
 
@@ -355,7 +369,6 @@ function nextQue() {
 
 // 질문 건너뛰기 카운트
 function skipQueCnt(id) {
-    console.log(id);
     database.ref('questions/' + id).update({
         skips: firebase.database.ServerValue.increment(1),
     })    
@@ -408,22 +421,28 @@ function showGameResult() {
         // 결과를 표로 표시
         database.ref('questions/' + id ).once("value").then(function(snapshot) {
             var que = snapshot.val().question;
-            if ( ansDict[id] == "ans1" ) {
-                var answer = snapshot.val().answer_1;
-            } else if ( ansDict[id] == "ans2" ) {
-                var answer = snapshot.val().answer_2;
-            }
-
+            var ans1 = snapshot.val().answer_1;
+            var ans2 = snapshot.val().answer_2;
+            
             calcRatio(id, ansDict[id]).then(function(percent) {
                 var tr = document.createElement("tr");
-    
+                
                 var td = "";
                 var td = '<tr>' +
-                            '<td>' + que + '</td>' +
-                            '<td>' + answer + '</td>' +
-                            '<td>' + percent + '%</td>' +
-                         '</tr>';
+                '<td>' + que + '</td>' +
+                '<td>' + ans1 + '</td>' +
+                '<td>' + ans2 + '</td>' +
+                '<td>' + percent + '%</td>' +
+                '</tr>';
                 tr.innerHTML = td;
+                
+
+                // 선택한 답변에 클래스 추가
+                if ( ansDict[id] == "ans1" ) {
+                    tr.getElementsByTagName("td")[1].className = "choosed";
+                } else if ( ansDict[id] == "ans2" ) {
+                    tr.getElementsByTagName("td")[2].className = "choosed";
+                }
 
                 resultTable.append(tr);
 
@@ -448,7 +467,7 @@ function gameSetting() {
     nextQue();
 
     history.pushState('game', 'game', './');
-    moveTo('game');
+    moveTo("game");
 }
 
 
@@ -568,7 +587,6 @@ matchBtn.addEventListener('click', e => {
 
 // =================소셜 공유(사이트)=================
 shareBtns = document.getElementsByClassName("shareSite")[0].getElementsByTagName("button");
-otherShareBtn = document.getElementsByClassName("otherShareBtn")[0];
 
 // 카카오톡 공유
 function kakaoSiteShare() {
@@ -615,27 +633,27 @@ function siteLinkCopy() {
 }
 
 
-// 기타 방식으로 공유
-otherShareBtn.addEventListener("click", function() {
-    var title = window.document.title;
-    var url = window.document.location.href;
+shareBtns[0].addEventListener("click", kakaoSiteShare);
+// shareBtns[1].addEventListener("click", facebookSiteShare);
 
+// 기타 방식으로 공유
+shareBtns[2].addEventListener("click", function() {
+    
+    // 공유 기능 가능하면 공유 네비게이션 열고 불가능하면 공유 링크 복사
     if (navigator.share) {
+        var title = window.document.title;
+        var url = window.document.location.href;
+
         navigator.share({
             title: `${title}`,
             url: `${url}`
         })
         .catch(console.error);
     } else {
-        alert("해당 기기에서는 다른 공유 방식이 지원되지 않습니다.")
+        siteLinkCopy();
     }
+
 })
-
-
-shareBtns[0].addEventListener("click", kakaoSiteShare);
-// shareBtns[1].addEventListener("click", facebookSiteShare);
-shareBtns[2].addEventListener("click", siteLinkCopy);
-
 
 
 // =================소셜 공유(결과)=================
