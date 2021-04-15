@@ -40,6 +40,9 @@ function getParam() {
         }).catch(function(error) {
             alert("잘못된 경로입니다.");          
         })
+    } else {
+        startBtn.style.display = "block";
+        matchBtn.style.display = "none";    
     }
 }
 getParam();
@@ -367,6 +370,12 @@ function nextQue() {
 
 }
 
+// 전체 질문 개수 설정
+function setTotQue() {
+    var totQue = document.getElementById("selectTotQue").value;
+    document.getElementById("totQue").innerHTML = totQue;
+}
+
 // 질문 건너뛰기 카운트
 function skipQueCnt(id) {
     database.ref('questions/' + id).update({
@@ -463,9 +472,11 @@ function showGameResult() {
 // 게임 기본 세팅
 function gameSetting() {
     var ansDict = [];
+    
     document.getElementById("currQue").innerHTML = 1;
+    setTotQue();
     nextQue();
-
+    
     history.pushState('game', 'game', './');
     moveTo("game");
 }
@@ -571,7 +582,7 @@ function matchAns() {
     document.getElementById("targetName").innerHTML = targetName;
     document.getElementById("conformity").innerHTML = Math.round(conformity);
 
-    document.getElementsByClassName("conformityWrap")[0].style.display = "block";
+    document.getElementsByClassName("matchResult")[0].style.display = "block";
 }
 
 
