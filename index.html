@@ -7,7 +7,9 @@
     <title>타이틀 뭐로 정해야될지 모르겠다</title>
 
     <link rel="stylesheet" href="/css/style.css">
+
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
 
 </head>
 <body>
@@ -99,7 +101,7 @@
             <input type="text" id="shareDescription">
         </div>
 
-        <div class="shareSite">
+        <div class="shareResult">
             <p>친구와 나는 얼마나 일치할까요? 일치도를 확인할 수 있어요 어쩌구저쩌구</p>
             <p>공유해서 확인하기</p>
             <!-- <div class="shareBtn">
@@ -131,17 +133,19 @@
         <div class="header list_header">
             <div id="searchQue">
                 <form>
-                    <select id="">
+                    <select id="by">
                         <option value="que">질문</option>
                         <option value="ans">답변</option>
                     </select>
-                    <input type="text" id="">
-                    <i class="fas fa-search" id="searchQueBtn"></i>
+                    <input type="text" id="searchWord" placeholder="탕수육">
+                    <button id="searchQueBtn"><i class="ri-search-line"></i></button>
                 </form>
             </div>
-            <i class="fas fa-plus" id="addQueBtn"></i>
-            <i class="fas fa-times closeListBtn"></i>
+            <div id="listMenu">
+                <i class="ri-close-line closeListBtn"></i>
+            </div>
         </div>
+        <i class="ri-add-line" id="addQueBtn"></i>
         <ul id="queList"></ul>
     </div>
 
@@ -150,25 +154,38 @@
     <!-- 질문 추가 모달 -->
     <div class="modal" id="addQueModal">
         <div class="modal-content">
+            <i class="ri-close-line closeModalBtn"></i>
             <form id="addQueForm">
-                <input type="text" id="newQue" placeholder="탕수육은?">
-                <input type="text" id="newAns1" placeholder="부먹">
-                <input type="text" id="newAns2" placeholder="찍먹">
-                <button id="newQueSubmitBtn">submit</button>
+                <div>
+                    <label for="newQue">질문</label>
+                    <input type="text" id="newQue" placeholder="탕수육은?" maxlength="30">
+                </div>
+                <div>
+                    <label for="newAns1">선택1</label>
+                    <input type="text" id="newAns1" placeholder="부먹" maxlength="30">
+                </div>
+                <div>
+                    <label for="newAns2">선택2</label>
+                    <input type="text" id="newAns2" placeholder="찍먹" maxlength="30">
+                </div>
+                <button id="newQueSubmitBtn">등록</button>
             </form>
-            <div>
-                <p>혹시 이미 존재하는 질문이 아닌가요?</p>
-                <div>질문들</div>
-            </div>
+            <!-- <div>
+                <p class="rule">
+                    다음 내용들은 법적 제재의 대상이 될 수 있습니다.<br>
+                    ※
+                </p>
+            </div> -->
         </div>
     </div>
     
     <!-- 이름 입력 모달 -->
     <div class="modal" id="putNameModal">
         <div class="modal-content">
+            <i class="ri-close-line closeModalBtn"></i>
             <p>결과 확인을 위해 이름을 입력해주세요.</p>
             <form>
-                <input type="text">
+                <input type="text" maxlength="10">
                 <button id="nameSubmitBtn">확인</button>
             </form>
         </div>

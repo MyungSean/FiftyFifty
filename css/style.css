@@ -1,33 +1,42 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap");
+
 :root {
-    --header-height: 50px;
+    --header-height: 56px;
+    --main-color: #ff9c6e;
+    --background-color: #ffb999;
 }
 
 * {
     box-sizing: border-box;
+
+    font-family: 'Noto Sans KR';
 }
 html, body {
     margin: 0;
 }
 
 .report {
-    color: #e91f18;
+    color: #979797;
     cursor: pointer;
-    text-decoration: underline;
 }
 .report.disable {
-    color: rgb(151, 151, 151);
+    color: #e91f18;
 }
-
 
 /* 페이지 헤더 */
 .header {
     width: 100vw;
     height: var(--header-height);
-    border: 1px solid #2929ff;
+    background-color: var(--background-color);
+    padding: 8px 16px;
 }
 
 .header i {
     font-size: calc(var(--header-height) - 20px);
+}
+
+input {
+    outline: none;
 }
 
 
@@ -150,62 +159,142 @@ html, body {
 /* 질문 리스트 */
 .list_area {
     display: none;
+    background-color: rgb(250, 250, 250);
 }
 
 .list_header div {
     display: inline-block;
 }
 
+/* 질문 검색 */
+#searchQue {
+    border: 1px solid #bebebe;
+    border-radius: 7px;
+    float: left;
+    height: 40px;
+    width: 75%;
+    min-width: 230px;
+    max-width: 700px;
+    overflow: hidden;
+}
+#searchQue * {
+    border: none;
+}
+#searchQue select {
+    float: left;
+    height: 40px;
+    width: 50px;
+    padding: 5px;
+    margin: 0;
+}
+#searchQue input[type="text"] {
+    float: left;
+    height: 40px;
+    width: calc( 100% - 100px );
+    padding: 0 10px;
+    margin: 0;
+}
+#searchQue button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    
+    height: 40px;
+    width: 50px;
+    float: right;
+    padding: 5px 10px;
+
+    color: #414141;
+    background-color: #ececec;
+}
+#searchQue button i {
+    font-size: 22px;
+}
+
+#listMenu {
+    float: right;
+    margin-top: 6px;
+    color: #414141;
+}
+#listMenu i {
+    font-size: 30px;
+}
+
+#addQueBtn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1;
+
+    padding: 8px;
+    border-radius: 50%;
+    background-color: var(--background-color);
+    opacity: .8;
+
+    color: #ffffff;
+    font-size: 35px;
+}
+
 #queList {
     list-style: none;
     padding: 0;
+    margin: 15px;
     text-align: center;
 }
 
 #queList li {
-    border: 1px solid #ff0000;
+    border: 1px solid #cacaca83;
+    border-radius: 7px;
+    background-color: #ffffff;
+    box-shadow: 0 0 8px 0px rgba(80, 80, 80, 0.25);
     position: relative;
     display: flex;
     flex-flow: column;
+    padding: 10px;
+    margin-bottom: 15px;
 }
 
 #queList .que {
-    padding: 10px;
+    padding-bottom: 10px;
+    font-size: 1em;
 }
 
 #queList .ansWrap {
     display: flex;
     flex-flow: row nowrap;
-    border-radius: 1em;
+    border-radius: 10px;
     overflow: hidden;
+    border: 1px solid var(--main-color);
 }
 #queList .ans {
     padding: 5px;
     transition: .2s;
     cursor: pointer;
 }
+#queList .select {
+    background-color: var(--main-color);
+}
 #queList .ans1 {
-    background-color: #8ad4ff;
+    border-right: 1px solid var(--main-color);
     flex-grow: 0;
     flex-shrink: 0;
     flex-basis: 50%;
 }
 #queList .ans2 {
     flex-grow: 1;
-    background-color: #ffda8a;
 }
-/* #queList .ans:hover {
-    background-color: rgb(163, 163, 163);
-} */
 #queList .viewsBox {
     position: absolute;;
-    left: 5px;
-    top: 5px;
+    left: 12px;
+    top: 7px;
     color: gray;
     font-size: 10px;
 }
 #queList .report {
-    margin-left: 5px;
+    position: absolute;;
+    right: 12px;
+    top: 4px;
+    font-size: 18px;
 }
 
 
@@ -215,7 +304,7 @@ html, body {
 .modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    z-index: 999; /* Sit on top */
     padding-top: 100px; /* Location of the box */
     left: 0;
     top: 0;
@@ -254,21 +343,45 @@ html, body {
 }
 
 .modal-content button {
-    /* display: block; */
-    margin-left: auto;
-    margin-right: 0;
+    padding: 5px 12px;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--main-color);
+    color: #ffffff;
+    font-size: 14px;
+}
+
+.modal-content label {
+    display: inline-block;
+    width: 45px;
+    font-size: 14px;
 }
 
 .modal-content input {
-    margin-bottom: 5px;
+    margin-bottom: 15px;
+    padding: 5px;
+    border: none;
+    border-bottom: 1px solid #adadad;
+    width: calc( 100% - 60px );
+    transition: .2s;
+}
+.modal-content input:focus {
+    border-bottom: 1px solid var(--main-color);
 }
 
+.modal-content .closeModalBtn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 25px;
+}
 
 /* 질문 추가 모달 */
-#addQueModal {
-    /* display: block; */
-}
+/* #addQueModal {
+    display: block;
+} */
 
 /* 이름 입력 모달 */
 /* #putNameModal {
+    display: block;
 } */

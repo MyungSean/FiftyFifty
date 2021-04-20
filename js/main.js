@@ -100,9 +100,9 @@ function selectAnswer(id, answer) {
 // 답변 비율 계산
 function calcRatio(id, answer) {
     return database.ref('questions/' + id).once('value').then(function(snapshot) {
-        var views = snapshot.val().views;
         var select_1 = snapshot.val().select_1;
-        var percent_1 = Math.round(select_1/views*100);
+        var select_2 = snapshot.val().select_2;
+        var percent_1 = Math.round( select_1 / (select_1 + select_2) * 100);
 
         if ( answer == "ans1" ) {
             return percent_1;
@@ -114,6 +114,7 @@ function calcRatio(id, answer) {
 
 // 결과 표시
 function showResult(id, answer) {
+    // 답변 비율 표시
     calcRatio(id, "ans1").then(function(percent_1) {
         
         var ans1 = document.getElementById(id).getElementsByClassName('ans1')[0];
@@ -128,6 +129,14 @@ function showResult(id, answer) {
         ans2.appendChild(result_2);
 
     })
+
+    // 선택한 답변에 클래스 추가
+    var que = document.getElementById(id);
+    if ( answer == "ans1" ) {
+        que.getElementsByClassName("ans")[0].classList.add("select");
+    } else {
+        que.getElementsByClassName("ans")[1].classList.add("select");
+    }
 }
 
 // 인게임 결과 표시
@@ -173,68 +182,134 @@ function report(id) {
 }
 
 
-// 질문 리스트 받아오기, 답변 클릭 이벤트
-database.ref( 'questions' ).orderByChild('views').limitToLast(15).once('value').then(function(snapshot) {
-
-    snapshot.forEach(function (childSnapshot) {
-
-        var state = childSnapshot.val().state;
+// 리스트에 질문 추가
+function prependQue(queId) {
+    database.ref("questions").child(queId).once("value").then(function(snapshot) {
+        
+        var state = snapshot.val().state;
         if ( state !== "active" ) {
             return;
         }
-
-        var queId = childSnapshot.key;
-        var que = childSnapshot.val().question;
-        var ans1 = childSnapshot.val().answer_1;
-        var ans2 = childSnapshot.val().answer_2;
-        var views = childSnapshot.val().views;
-
+        
+        var que = snapshot.val().question;
+        var ans1 = snapshot.val().answer_1;
+        var ans2 = snapshot.val().answer_2;
+        var views = snapshot.val().views;
+        
         var list = document.createElement("li");
         list.setAttribute("id", queId);
-
+        
         var html = "";
         var html = '<span class="viewsBox">조회수: <span class="views">' + views.toString() + '</span></span>' +
-                   '<span class="que">' + que + '<span class="report">신고</span></span>' +
-                   '<span class="ansWrap">' +
-                    '<span class="ans ans1">' + ans1 + '</span>' +
-                    '<span class="ans ans2">' + ans2 + '</span>' +
-                   '</span>';
-
+        '<span class="que">' + que + '<span class="report"><i class="ri-alarm-warning-fill"></i></span></span>' +
+        '<span class="ansWrap">' +
+        '<span class="ans ans1">' + ans1 + '</span>' +
+        '<span class="ans ans2">' + ans2 + '</span>' +
+        '</span>';
+        
         list.innerHTML = html;
         document.getElementById('queList').prepend(list);
+        
+    })
+}
+
+// 질문 제목으로 검색
+function searchByQue(que) {
+    var searchWord = que;
+
+    database.ref("questions").orderByChild('views').once("value").then(function(snapshot) {
+
+        snapshot.forEach(function(childSnapshot) {
+            var que = childSnapshot.val().question;
+
+            if ( que.includes(searchWord) ) {
+                var queId = childSnapshot.key;
+                prependQue(queId);
+            }
+
+        })
+
+    })
+}
+
+// 질문 답변으로 검색
+function searchByAns(ans) {
+    var searchWord = ans;
+
+    database.ref("questions").orderByChild('views').once("value").then(function(snapshot) {
+
+        snapshot.forEach(function(childSnapshot) {
+            var ans1 = childSnapshot.val().answer_1;
+            var ans2 = childSnapshot.val().answer_2;
+
+            if ( ans1.includes(searchWord) || ans2.includes(searchWord) ) {
+                var queId = childSnapshot.key;
+                prependQue(queId);
+            }
+        })
+
+    })
+}
+
+
+// 댓글 열기 버튼 추가
+function addCommentBtn(queId) {
+    var queLi = document.getElementById(queId);
+    var openCommentBtn = document.createElement("div");
+    openCommentBtn.classList.add("openCommentBtn");
+    openCommentBtn.innerHTML = "댓글 확인하기";
+    queLi.appendChild(openCommentBtn);
+}
+
+
+
+// 질문 리스트 받아오기, 답변 클릭 이벤트
+database.ref( 'questions' ).orderByChild('views').once('value').then(function(snapshot) {
+
+    snapshot.forEach(function (childSnapshot) {
+
+        var queId = childSnapshot.key;
+
+        prependQue(queId);
 
     });
+ 
+})
 
-    // 답변 클릭
-    $('.list_area .ans').click(function() {
+// 답변 클릭
+$(document).on("click", ".list_area .ans", function() {
+    var id = $(this).closest('li').attr('id');
+
+    // 중복 답변 방지
+    if ( preventRepeat(id) ) {
+        return;
+    };
+
+    if ( $(this).hasClass("ans1") ) {
+        var answer = "ans1";
+    } else if ( $(this).hasClass("ans2") ) {
+        var answer = "ans2";
+    }
+    
+    selectAnswer(id, answer);
+    showResult(id, answer)
+    // addCommentBtn(id);
+})
+
+// 질문 신고
+$(document).on("click", ".list_area .report", function() {
+    if ( $(this).hasClass('disable') ) {
+        return;
+    }
+
+    var r = confirm("부적절한 질문으로 신고하시겠습니까?");
+    if( r == true ){
         var id = $(this).closest('li').attr('id');
-
-        // 중복 답변 방지
-        if ( preventRepeat(id) ) {
-            return;
-        };
-
-        if ( $(this).hasClass("ans1") ) {
-            var answer = "ans1";
-        } else if ( $(this).hasClass("ans2") ) {
-            var answer = "ans2";
-        }
-        
-        selectAnswer(id, answer);
-        showResult(id, answer)
-    })
-
-    // 질문 신고
-    $('.list_area .report').click(function(){
-        var id = $(this).closest('li').attr('id');
-        if ( $(this).hasClass('disable') ) {
-            return;
-        }
         report(id);
         $(this).addClass('disable');
-    })
-    
-});
+    }
+})
+
 
 // 질문 리스트 보기
 $('.showListBtn').click(function() {
@@ -245,6 +320,28 @@ $('.showListBtn').click(function() {
 // 질문 리스트 닫기
 $('.closeListBtn').click(function() {
     moveTo("intro");
+})
+
+// 질문 검색
+document.getElementById("searchQueBtn").addEventListener("click", function(e) {
+    e.preventDefault();
+
+    document.getElementById("queList").innerHTML = "";
+
+    var by = document.getElementById("by").value;
+    var searchWord = document.getElementById("searchWord").value;
+
+    if ( by == "que" ) {
+        searchByQue(searchWord);
+    } if ( by == "ans" ) {
+        searchByAns(searchWord);
+    }
+})
+
+
+// 댓글 보기
+$(document).on("click", ".openCommentBtn", function() {
+    // console.log($(this).closest("li").attr("id"));
 })
 
 
@@ -540,12 +637,16 @@ document.getElementById("nameSubmitBtn").addEventListener("click", function(e) {
 
 // 질문 신고
 $('.game_area .report').click(function(){
-    var id = $(this).closest('.queWrap').attr('name');
     if ( $(this).hasClass('disable') ) {
         return;
     }
-    report(id);
-    $(this).addClass('disable');
+
+    var r = confirm("부적절한 질문으로 신고하시겠습니까?");
+    if( r == true ){
+        var id = $(this).closest('.queWrap').attr('name');
+        report(id);
+        $(this).addClass('disable');
+    }
 })
 
 
@@ -597,7 +698,7 @@ matchBtn.addEventListener('click', e => {
 
 
 // =================소셜 공유(사이트)=================
-shareBtns = document.getElementsByClassName("shareSite")[0].getElementsByTagName("button");
+siteShareBtns = document.getElementsByClassName("shareSite")[0].getElementsByTagName("button");
 
 // 카카오톡 공유
 function kakaoSiteShare() {
@@ -644,11 +745,11 @@ function siteLinkCopy() {
 }
 
 
-shareBtns[0].addEventListener("click", kakaoSiteShare);
-// shareBtns[1].addEventListener("click", facebookSiteShare);
+siteShareBtns[0].addEventListener("click", kakaoSiteShare);
+// siteShareBtns[1].addEventListener("click", facebookSiteShare);
 
 // 기타 방식으로 공유
-shareBtns[2].addEventListener("click", function() {
+siteShareBtns[2].addEventListener("click", function() {
     
     // 공유 기능 가능하면 공유 네비게이션 열고 불가능하면 공유 링크 복사
     if (navigator.share) {
@@ -668,10 +769,10 @@ shareBtns[2].addEventListener("click", function() {
 
 
 // =================소셜 공유(결과)=================
-shareByKakaoBtn = document.getElementById("kakao-share-btn");
+resultShareBtns = document.getElementsByClassName("shareResult")[0].getElementsByTagName("button");
 shareUrl = document.getElementById("shareUrl");
 shareDescription = document.getElementById("shareDescription");
-copyBtn = document.getElementById("copyBtn");
+
 
 // 해당 세트의 고유값 생성
 function makeSetId() {
@@ -693,8 +794,8 @@ function saveRecord() {
     })
 }
 
-// 카카오톡으로 링크 공유
-function kakaoShare() {
+// 카카오톡 공유
+function kakaoResultShare() {
     var url = shareUrl.value;
     var description = shareDescription.value;
 
@@ -706,8 +807,8 @@ function kakaoShare() {
         imageUrl:
           'http://k.kakaocdn.net/dn/Q2iNx/btqgeRgV54P/VLdBs9cvyn8BJXB3o7N8UK/kakaolink40_original.png',
         link: {
-          mobileWebUrl: window.location.href,
-          webUrl: window.location.href,
+          mobileWebUrl: url,
+          webUrl: url,
         },
       },
       buttons: [
@@ -721,6 +822,8 @@ function kakaoShare() {
       ],
     })
 }
+
+// 페이스북 공유
 
 // 클립보드에 링크 복사
 function copyLink() {
@@ -739,20 +842,34 @@ function copyLink() {
 }
 
 
-
 // 공유 버튼 클릭했을 때 데이터베이스에 게임 기록 저장
 $('.shareBtn').click(function() {
     saveRecord();
 })
 
-// 클립보드에 링크 복사
-copyBtn.addEventListener("click", copyLink);
+resultShareBtns[0].addEventListener("click", kakaoResultShare);
+// resultShareBtns[1].addEventListener("click", facebookResultShare);
 
-// 카카오톡으로 링크 공유
-shareByKakaoBtn.addEventListener("click", kakaoShare);
+// 기타 방식으로 공유
+resultShareBtns[2].addEventListener("click", function() {
+    
+    // 공유 기능 가능하면 공유 네비게이션 열고 불가능하면 공유 링크 복사
+    if (navigator.share) {
+        var title = window.document.title;
+        var description = shareDescription.value;
+        var url = shareUrl.value;
 
+        navigator.share({
+            title: `${title}`,
+            text: `${description}`,
+            url: `${url}`
+        })
+        .catch(console.error);
+    } else {
+        copyLink();
+    }
 
-
+})
 
 
 
@@ -788,6 +905,11 @@ $('.modal').click(function(e) {
 })
 $('.modal-content').click(function(e) {
     e.stopPropagation();  
+})
+
+// 모달 닫기 버튼으로 모달 닫기
+$('.closeModalBtn').click(function(e) {
+    $(this).closest('.modal').hide();
 })
 
 
