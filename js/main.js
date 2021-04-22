@@ -155,6 +155,13 @@ function showResult_ingame(id, answer) {
         ans1.appendChild(result_1);
         ans2.appendChild(result_2);
     })
+    
+    // 선택한 답변에 클래스 추가
+    if ( answer == "ans1" ) {
+        game_area.getElementsByClassName("ans")[0].classList.add("select");
+    } else {
+        game_area.getElementsByClassName("ans")[1].classList.add("select");
+    }
 }
 
 
@@ -364,6 +371,7 @@ $(window).scroll(function() {
 // =================게임 진행=================
 var ansDict = [];
 startBtn = document.getElementById("startBtn");
+skipBtn = document.getElementById("skipBtn");
 confirmBtn = document.getElementById("confirmBtn");
 showResultBtn = document.getElementById("showResultBtn");
 
@@ -460,10 +468,14 @@ function nextQue() {
     $('.game_area .report').removeClass("disable");
 
     // 다음 단계 버튼 초기화
-    confirmBtn = document.getElementById("confirmBtn");
-    showResultBtn = document.getElementById("showResultBtn");
+    if ( idList.constructor == Promise ) {
+        skipBtn.style.display = "block";
+    }
     confirmBtn.style.display = "none";
     showResultBtn.style.display = "none";
+
+    // 선택한 답변 초기화
+    $('.game_area .ans').removeClass("select")
 
 }
 
@@ -488,11 +500,8 @@ function showNextStepBtn() {
     totQueHtml = document.getElementById("totQue").innerHTML
     totQue = Number(totQueHtml);
 
-    
-    confirmBtn = document.getElementById("confirmBtn");
-    showResultBtn = document.getElementById("showResultBtn");
-    
-    if ( currQue == totQue ) {
+    skipBtn.style.display = "none";
+        if ( currQue == totQue ) {
         showResultBtn.style.display = "block";
     } else {
         confirmBtn.style.display = "block";
@@ -607,12 +616,12 @@ $('.game_area .ans').click(function() {
 
 // 건너뛰기 버튼 클릭
 document.getElementById("skipBtn").addEventListener("click", function() {
-    var id = $('.game_area').children('.queWrap').attr('name');
+    var id = game_area.getElementsByClassName("queWrap")[0].getAttribute("name");
     skipQueCnt(id);
     nextQue();
 })
 
-// 다음 질문 선택시 현재 문제 카운트
+// 다음 질문 버튼 클릭
 document.getElementById("confirmBtn").addEventListener("click", function() {
     nextQue();
     currQueCnt();
@@ -643,7 +652,7 @@ $('.game_area .report').click(function(){
 
     var r = confirm("부적절한 질문으로 신고하시겠습니까?");
     if( r == true ){
-        var id = $(this).closest('.queWrap').attr('name');
+        var id = game_area.getElementsByClassName("queWrap")[0].getAttribute("name");
         report(id);
         $(this).addClass('disable');
     }

@@ -57,28 +57,37 @@
     
     <!-- 게임 진행 -->
     <div class="area game_area">
-        <div class="queWrap">
-            <!-- 질문 -->
-            <h2></h2> 
-            
-            <!-- 정보 -->
-            <span class="viewsBox">조회수: <span class="views"></span></span>
-            <span class="report">신고</span>
-            <span><span id="currQue">1</span>/<span id="totQue">2</span></span>
-            <span id="queCnt">0</span>
-    
-            <!-- 답변 -->
-            <div class="ansWrap">
-                <span class="ans ans1"></span>
-                <span class="ans ans2"></span>
+        <div class="game_wrapper">
+            <div class="logo">
+                <i class="ri-scales-line ri-3x" style="color: orange;"></i>
+                <p style="margin: 0; margin-top: -10px; color: orange;">logo sample</p>
             </div>
-        </div>
-
-        <!-- 버튼 -->
-        <div class="nextStepWrap">
-            <div class="nextStepBtn nextQueBtn" id="skipBtn">건너뛰기</div>
-            <div class="nextStepBtn nextQueBtn" id="confirmBtn">다음 질문</div>
-            <div class="nextStepBtn" id="showResultBtn">결과 보기</div>
+            <div class="handling_div">
+                <div class="queInfo">
+                    <!-- 정보 -->
+                    <span class="viewsBox">조회수: <span class="views"></span></span>
+                    <span class="queNav"><span id="currQue">1</span>/<span id="totQue">5</span></span>
+                    <span class="report"><i class="ri-alarm-warning-fill"></i></span>
+                    <span id="queCnt">0</span>
+                </div>
+                <div class="queWrap">
+                    <!-- 질문 -->
+                    <h2></h2> 
+                    
+                    <!-- 답변 -->
+                    <div class="ansWrap">
+                        <span class="ans ans1"></span>
+                        <span class="ans ans2"></span>
+                    </div>
+                </div>
+        
+                <!-- 버튼 -->
+                <div class="nextStepWrap">
+                    <div class="nextStepBtn nextQueBtn" id="skipBtn">건너뛰기</div>
+                    <div class="nextStepBtn nextQueBtn" id="confirmBtn">다음 질문</div>
+                    <div class="nextStepBtn" id="showResultBtn">결과 보기</div>
+                </div>
+            </div>
         </div>
     </div>
 
