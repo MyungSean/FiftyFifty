@@ -94,35 +94,36 @@
 
     <!-- 결과 -->
     <div class="area result_area">
-        <p><span id="userName"></span>님의 대중도는 <span id="avgPercent"></span>% 입니다.</p>
-        <div class="matchResult">
-            <p class="conformityWrap"><span id="targetName"></span>님과 당신의 일치도는 <span id="conformity"></span>% 입니다.</p>
-            <!-- <p>우린 그냥 남</p>
-            <p>친구 맞나요..?</p>
-            <p>우린 가끔 통할 때가 있지</p>
-            <P>이렇게 잘 맞는 친구 본 적 있어?</P>
-            <p>너 뭘 좀 아는구나?</p> -->
-        </div>
-        <table id="resultTable"></table>
+        <div class="mainResult">
+            <p><span id="userName"></span>님의 대중도는 <span id="avgPercent"></span>% 입니다</p>
+            <div class="matchResult">
+                <p class="conformityWrap"><span id="targetName"></span>님과 당신의 일치도는 <span id="conformity"></span>% 입니다.</p>
+                <!-- <p>우린 그냥 남</p>
+                <p>친구 맞나요..?</p>
+                <p>우린 가끔 통할 때가 있지</p>
+                <P>이렇게 잘 맞는 친구 본 적 있어?</P>
+                <p>너 뭘 좀 아는구나?</p> -->
+            </div>
 
-        <div class="shareContent">
-            <input type="text" id="shareUrl">
-            <input type="text" id="shareDescription">
+            <div class="box">
+                 <div class="percent">
+                    <svg>
+                        <circle cx="70" cy="70" r="70"></circle>
+                        <circle cx="70" cy="70" r="70"></circle>
+                    </svg>
+                    <div class="number">
+                        <!-- <h2><span>%</span></h2> -->
+                    </div>
+                 </div>
+            </div>
+
+            <p id="detailResultBtn">결과 자세히 보기</p>
+            <table id="resultTable"></table>
         </div>
 
         <div class="shareResult">
-            <p>친구와 나는 얼마나 일치할까요? 일치도를 확인할 수 있어요 어쩌구저쩌구</p>
+            <p>친구도 나와 같은 선택을 할까요? 친구와 나의 일치도를 확인해보세요!</p>
             <p>공유해서 확인하기</p>
-            <!-- <div class="shareBtn">
-                <a href="javascript:;" id="kakao-share-btn">
-                    <img src="https://d2k6w3n3qf94c4.cloudfront.net/static/common/img/SNS/kakao.7f0f47e99a41.svg" width="100px" />
-                    <span>카카오톡 공유</span>
-                </a>
-            </div>
-            <div class="shareBtn" id="copyBtn">
-                <i class="fas fa-link"></i>
-                <span>링크 복사하기</span>
-            </div> -->
             <button class="shareBtn">
                 <img src="img/kakao_icon.jpg" alt="카카오톡으로 공유">
             </button>
@@ -134,7 +135,16 @@
             </button>
         </div>
 
-        <div class="showListBtn">더 많은 질문 보기</div>
+        <div class="nav">
+            <div class="showListBtn">더 많은 질문 보기</div>
+            <div class="tryAgainBtn">다시 하기</div>
+        </div>
+
+        <div class="shareContent">
+            <input type="text" id="shareUrl">
+            <input type="text" id="shareDescription">
+        </div>
+
     </div>
 
     <!-- 질문 리스트 -->
@@ -194,7 +204,7 @@
             <i class="ri-close-line closeModalBtn"></i>
             <p>결과 확인을 위해 이름을 입력해주세요.</p>
             <form>
-                <input type="text" maxlength="10">
+                <input type="text" maxlength="10" placeholder="이름">
                 <button id="nameSubmitBtn">확인</button>
             </form>
         </div>
@@ -215,30 +225,10 @@
     <script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
     <script type="text/javascript">
         Kakao.init('7ff0bc3b307b18807397be4055e1d1b1');
-
-        // Kakao.Link.createDefaultButton({
-        // container: '#kakao-link-btn',
-        // objectType: 'feed',
-        // content: {
-        //     title: document.title,
-        //     description: '내용, 주로 해시태그',
-        //     imageUrl: document.images[0].src,
-        //     link: {
-        //     webUrl: document.location.href,
-        //     mobileWebUrl: document.location.href
-        //     }
-        // },
-        // buttons: [
-        //     {
-        //     title: 'Open!',
-        //     link: {
-        //         mobileWebUrl: document.location.href,
-        //         webUrl: document.location.href
-        //     }
-        //     }  
-        // ]
-        // });
     </script>
+
+    <!-- 구글 애드센스 -->
+    <script data-ad-client="ca-pub-6330140265274066" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 
     <script src="js/main.js"></script>
     

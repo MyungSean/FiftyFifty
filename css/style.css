@@ -3,7 +3,8 @@
 :root {
     --header-height: 56px;
     --main-color: #ff9c6e;
-    --background-color: #ffb999;
+    --sub-color: #ffb999;
+    --background-color: #f3f3f3;
 }
 
 * {
@@ -11,7 +12,7 @@
 
     font-family: 'Noto Sans KR';
 }
-html, body {
+html, body, p {
     margin: 0;
 }
 
@@ -67,9 +68,6 @@ input {
     width: 50px;
     border-radius: 50%;
 }
-/* .shareSite .otherShareBtn {
-    display: none;
-} */
 
 .startGameBtn {
     display: none;
@@ -102,7 +100,7 @@ input {
     width: calc( 100% - 36px);
     position: absolute;
     left: 50%;
-    top: 40%;
+    top: 45vh;
     transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%); /* for IE 9 */
     -webkit-transform: translate(-50%, -50%); /* for Safari */
@@ -195,15 +193,133 @@ input {
 /* 결과 화면 */
 .result_area {
     display: none;
+    text-align: center;
 }
-.result_area table,
-.result_area td {
-    border: 1px solid #000;
-    border-collapse: collapse;
+
+.result_area .mainResult {
+    background-color: var(--background-color);
+    box-shadow: 0 0 18px 0px rgba(80, 80, 80, 0.5);
+    padding: 20px;
+}
+
+.mainResult p {
+    font-size: 20px;
+}
+
+/* 퍼센트 표시 */
+.box {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+
+    margin: 20px 0;
+}
+.box .percent {
+    position: relative;
+    width: 150px;
+    height: 150px;
+}
+.box .percent svg {
+    position: relative;
+    width: 150px;
+    height: 150px;
+}
+.box .percent svg circle {
+    width: 150px;
+    height: 150px;
+    fill: none;
+    stroke-width: 10;
+    stroke: #000;
+    stroke-dasharray: 440;
+    stroke-dashoffset: 440;
+    stroke-linecap: round;
+    -ms-transform: rotate(-90deg); /* IE 9 */
+    -webkit-transform: rotate(-90deg); /* Chrome, Safari, Opera */
+    transform: rotate(-90deg) translate(-145px, 5px);
+}
+.box .percent svg circle:nth-child(1) {
+    stroke-dashoffset: 0;
+    stroke: #ffffff;
+}
+.box .percent svg circle:nth-child(2) {
+    /* stroke-dashoffset: calc(440 - (440 * 80) / 100); */
+    stroke: var(--main-color);
+}
+.box .percent svg circle:nth-child(2).effect {
+    animation: dash 2s;
+}
+@keyframes dash {
+    from {
+        stroke-dashoffset: 440;
+    }
+}
+.box .percent .number {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #111;
+}
+.box .percent .number h2 {
+    font-size: 40px;
+}
+.box .percent .number h2 span {
+    font-size: 22px;
+}
+
+
+#detailResultBtn {
+    color: #525252;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+
+#resultTable {
+    /* display: none; */
+    width: 100%;
+    font-size: 16px;
+}
+
+
+#resultTable tr {
+    display: flex;
+    flex-flow: row wrap;
+    overflow: hidden;
+
+    border: 1px solid #97979794;
+    border-radius: 15px;
+    background-color: #ffffff;
+
+    width: 100%;
+    margin-top: 10px;
+}
+#resultTable td {
+    flex-grow: 1;
+    padding: 5px;
+}
+#resultTable tr td:first-child {
+    font-size: 14px;
+    flex: 1 100%;
+}
+#resultTable tr td:nth-child(2) {
+    border-radius: 0 8px 0 0;
+    flex-basis: 50%;
+    flex-grow: 0;
+}
+#resultTable tr td:nth-child(3) {
+    border-radius: 8px 0 0 0;
 }
 
 #resultTable .choosed {
-    background-color: #fff2b7;
+    background-color: var(--sub-color);
 }
 
 
@@ -211,6 +327,47 @@ input {
 .matchResult {
     display: none;
 }
+
+
+/* 친구에게 공유 */
+.shareResult {
+    padding: 20px;
+}
+
+.shareResult p {
+    margin: 10px 0;
+}
+
+.shareResult button {
+    border: none;
+    background-color: transparent;
+    padding: 2px;
+}
+.shareResult img {
+    width: 50px;
+    border-radius: 50%;
+}
+
+
+.result_area .nav div {
+    /* display: inline-block; */
+    border-radius: 50px;
+    width: calc(100% - 40px);
+    padding: 10px 20px;
+    margin: auto;
+    margin-bottom: 10px;
+    
+    background-color: var(--main-color);
+    color: #ffffff;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+
+.result_area .shareContent {
+    display: none;
+}
+
 
 
 
@@ -287,7 +444,7 @@ input {
 
     padding: 8px;
     border-radius: 50%;
-    background-color: var(--background-color);
+    background-color: var(--sub-color);
     opacity: .8;
 
     color: #ffffff;
@@ -399,6 +556,10 @@ input {
 @keyframes animatetop {
     from {top:-300px; opacity:0}
     to {top:0; opacity:1}
+}
+
+.modal p {
+    margin: 16px 0;
 }
 
 .modal-content button {

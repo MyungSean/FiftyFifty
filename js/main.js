@@ -77,7 +77,6 @@ window.addEventListener('popstate', e => {
 
 
 
-
 // =================질문 답변=================
 // 답변 선택
 function selectAnswer(id, answer) {
@@ -538,37 +537,40 @@ function showGameResult() {
             var que = snapshot.val().question;
             var ans1 = snapshot.val().answer_1;
             var ans2 = snapshot.val().answer_2;
+            var select_1 = snapshot.val().select_1;
+            var select_2 = snapshot.val().select_2;
+
+            var percent_1 = Math.round( select_1 / (select_1 + select_2) * 100);
             
+            var tr = document.createElement("tr");
+            var td = "";
+            var td = `<tr>
+            <td>${que}</td>
+            <td>${ans1}(${percent_1}%)</td>
+            <td>${ans1}(${100-percent_1}%)</td>
+            </tr>`;
+            tr.innerHTML = td;
+            
+            // 선택한 답변에 클래스 추가
+            if ( ansDict[id] == "ans1" ) {
+                tr.getElementsByTagName("td")[1].className = "choosed";
+            } else if ( ansDict[id] == "ans2" ) {
+                tr.getElementsByTagName("td")[2].className = "choosed";
+            }
+
+            resultTable.append(tr);
+            $('#resultTable tr').hide();
+
+            // 대중도 표시
             calcRatio(id, ansDict[id]).then(function(percent) {
-                var tr = document.createElement("tr");
-                
-                var td = "";
-                var td = '<tr>' +
-                '<td>' + que + '</td>' +
-                '<td>' + ans1 + '</td>' +
-                '<td>' + ans2 + '</td>' +
-                '<td>' + percent + '%</td>' +
-                '</tr>';
-                tr.innerHTML = td;
-                
-
-                // 선택한 답변에 클래스 추가
-                if ( ansDict[id] == "ans1" ) {
-                    tr.getElementsByTagName("td")[1].className = "choosed";
-                } else if ( ansDict[id] == "ans2" ) {
-                    tr.getElementsByTagName("td")[2].className = "choosed";
-                }
-
-                resultTable.append(tr);
-
-
-                // 대중도 표시
                 totPercent = totPercent + percent;
                 dictLength = Object.keys(ansDict).length;
 
                 if ( index + 1 == dictLength ) {
                     var avgPercent = totPercent / dictLength;
-                    document.getElementById("avgPercent").innerHTML = Math.round(avgPercent * 10) / 10;
+                    document.getElementById("avgPercent").innerHTML = Math.round(avgPercent);
+
+                    showPercent(avgPercent);
                 }
             })
         })
@@ -636,6 +638,7 @@ document.getElementById("showResultBtn").addEventListener("click", function() {
 document.getElementById("nameSubmitBtn").addEventListener("click", function(e) {
     e.preventDefault();
     togglePutNameModal("hide")
+
     makeSetId();
     showGameResult();
     matchAns();
@@ -683,6 +686,8 @@ function matchAns() {
         var id = ansId[i];
         var targetAns = targetSet[id];
         var myAns = ansDict[id];
+
+        // 친구와 답변 일치했을 때
         if ( targetAns == myAns ) {
             var j = j + 1;
         }
@@ -704,6 +709,31 @@ matchBtn.addEventListener('click', e => {
 });
 
 
+
+
+// =================게임 결과 표시=================
+circle = document.getElementsByClassName("box")[0].getElementsByTagName("circle")[1];
+numberBox = document.getElementsByClassName("box")[0].getElementsByClassName("number")[0];
+detailResultBtn = document.getElementById("detailResultBtn");
+
+// 퍼센트 표시
+function showPercent(percent) {
+    var percentMark = document.createElement("h2");
+    percentMark.innerHTML = percent + "<span>%</span>";
+    numberBox.appendChild(percentMark);
+
+    var percent = (440 - (440 * percent) / 100);
+    
+    circle.style.strokeDashoffset = percent;
+    circle.classList.remove("effect");
+    circle.classList.add("effect");
+}
+
+detailResultBtn.addEventListener("click", function() {
+    $('#resultTable tr').slideToggle();
+})
+
+moveTo("result");
 
 
 // =================소셜 공유(사이트)=================
