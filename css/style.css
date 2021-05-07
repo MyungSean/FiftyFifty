@@ -10,7 +10,6 @@
 
 * {
     box-sizing: border-box;
-    font-family: 'Noto Sans KR', sans-serif;
 }
 
 html {
@@ -30,6 +29,8 @@ html, body, p {
     overflow: hidden;
 
     background-color: #ffffff;
+    font-family: 'Noto Sans KR', sans-serif;
+    color: #3a3a3a;
 }
 
 
@@ -160,6 +161,12 @@ input {
 }
 .game_area .select {
     background-color: var(--main-color);
+    color: #ffffff;
+    font-weight: bold;
+}
+.game_area .select div {
+    color: #ffffff;
+    font-weight: bold;
 }
 
 /* 다음 단계 버튼 */
@@ -435,6 +442,7 @@ input {
     padding-left: 5px;
     margin: 0;
     background-color: #ffffff;
+    cursor: pointer;
 }
 #searchQue input[type="text"] {
     float: left;
@@ -455,6 +463,7 @@ input {
 
     color: #414141;
     background-color: #ececec;
+    cursor: pointer;
 }
 #searchQue button i {
     font-size: 22px;
@@ -467,13 +476,22 @@ input {
 }
 #listMenu i {
     font-size: 30px;
+    cursor: pointer;
 }
 
-#addQueBtn {
+.addQueWrap {
     position: fixed;
+    bottom: 0;
+    z-index: 1;
+
+    width: 100%;
+    max-width: 800px;
+    text-align: right;
+}
+#addQueBtn {
+    position: absolute;
     bottom: 20px;
     right: 20px;
-    z-index: 1;
 
     padding: 8px;
     border-radius: 50%;
@@ -482,14 +500,30 @@ input {
 
     color: #ffffff;
     font-size: 35px;
+    cursor: pointer;
 }
+
+
+.sortBy {
+    padding: 10px 20px;
+    padding-bottom: 0;
+    margin-top: var(--header-height);
+}
+.sortBy span {
+    margin-right: 8px;
+    color: #797979;
+    cursor: pointer;
+}
+.sortBy span.select {
+    color: var(--main-color);
+    font-weight: bold;
+}
+
 
 #queList {
     list-style: none;
     margin: 15px;
-    margin-top: var(--header-height);
     padding: 0;
-    padding-top: 20px;
     text-align: center;
 }
 
@@ -524,6 +558,12 @@ input {
 }
 #queList .select {
     background-color: var(--main-color);
+    color: #ffffff;
+    font-weight: bold;
+}
+#queList .select div {
+    color: #ffffff;
+    font-weight: bold;
 }
 #queList .ans1 {
     border-right: 1px solid var(--main-color);

@@ -99,6 +99,8 @@ function selectAnswer(id, answer) {
         })
     }
 
+    changePopularity(id);
+
 }
 
 // 답변 비율 계산
@@ -169,6 +171,41 @@ function showResult_ingame(id, answer) {
 }
 
 
+// 인기도 계산
+function changePopularity(id) {
+    database.ref('questions/' + id).once('value').then(function(snapshot) {
+        var lastChange = snapshot.val().lastChange;
+        
+        // 마지막 수정 후로 지난 시간 분단위로 구하기
+        var timeInterval = ( Date.now() - lastChange ) / 1000 / 60 ;
+
+        // 마지막 수정 후 1분 넘게 지났을 때
+        if ( timeInterval > 1 ) {
+            var views = snapshot.val().views;
+            var skips = snapshot.val().skips;
+            var reports = snapshot.val().reports;
+            var date = snapshot.val().date;
+
+            var edt = new Date();
+            var sdt = new Date(date.split(" ")[0]);
+            var sdt = new Date(date);
+            var dateDiff = Math.round((edt.getTime()-sdt.getTime())/(1000*3600*24)*1000)/1000;
+
+            // 인기도 계산 공식
+            var hot = ( (views*10) - (skips*1) - (reports*10) ) / ( (Math.pow((dateDiff*0.1), 4) + 1) )
+            // console.log(hot);
+
+            var currDate = Date.now();
+
+            database.ref('questions/' + id).update({
+                hot: Math.round(hot),
+                lastChange: currDate
+            })
+        }
+    })
+}
+
+
 // 답변 중복 선택 방지
 function preventRepeat(id) {
     checked = $('#'+id).hasClass('checked');
@@ -229,9 +266,13 @@ function searchByQue(que) {
     var searchWord = que;
 
     database.ref("questions").orderByChild('views').once("value").then(function(snapshot) {
-
         snapshot.forEach(function(childSnapshot) {
             var que = childSnapshot.val().question;
+
+            // 오류 방지
+            if ( que == undefined ) {
+                return
+            }
 
             if ( que.includes(searchWord) ) {
                 var queId = childSnapshot.key;
@@ -252,6 +293,11 @@ function searchByAns(ans) {
         snapshot.forEach(function(childSnapshot) {
             var ans1 = childSnapshot.val().answer_1;
             var ans2 = childSnapshot.val().answer_2;
+
+            // 오류 방지
+            if ( ans1 == undefined || ans2 == undefined ) {
+                return
+            }
 
             if ( ans1.includes(searchWord) || ans2.includes(searchWord) ) {
                 var queId = childSnapshot.key;
@@ -275,17 +321,24 @@ function addCommentBtn(queId) {
 
 
 // 질문 리스트 받아오기, 답변 클릭 이벤트
-database.ref( 'questions' ).orderByChild('views').once('value').then(function(snapshot) {
+function showQueList(sortBy) {
+    document.getElementById("queList").innerHTML = "";
 
-    snapshot.forEach(function (childSnapshot) {
+    database.ref( 'questions' ).orderByChild(sortBy).once('value').then(function(snapshot) {
+    
+        snapshot.forEach(function (childSnapshot) {
+    
+            var queId = childSnapshot.key;
+    
+            prependQue(queId);
+    
+        });
+     
+    })
+}
 
-        var queId = childSnapshot.key;
 
-        prependQue(queId);
 
-    });
- 
-})
 
 // 답변 클릭
 $(document).on("click", ".list_area .ans", function() {
@@ -347,6 +400,29 @@ document.getElementById("searchQueBtn").addEventListener("click", function(e) {
     } if ( by == "ans" ) {
         searchByAns(searchWord);
     }
+})
+
+
+// 질문 정렬
+showQueList('hot'); // 기본 정렬
+sortByBtn = document.getElementsByClassName("sortBy")[0].getElementsByTagName("span");
+// 인기순
+sortByBtn[0].addEventListener("click", function() {
+    showQueList("hot");
+    $('.sortBy span').removeClass("select");
+    sortByBtn[0].classList.add("select");
+})
+// 조회순
+sortByBtn[1].addEventListener("click", function() {
+    showQueList("views");
+    $('.sortBy span').removeClass("select");
+    sortByBtn[1].classList.add("select");
+})
+// 최신순
+sortByBtn[2].addEventListener("click", function() {
+    showQueList("date");
+    $('.sortBy span').removeClass("select");
+    sortByBtn[2].classList.add("select");
 })
 
 
@@ -972,6 +1048,24 @@ $('.closeModalBtn').click(function(e) {
     $(this).closest('.modal').hide();
 })
 
+// 날짜와 시간 반환
+function getDateTime() {
+    
+    var today = new Date();
+
+    var mm = (today.getMonth()+1);
+    var dd = today.getDate();
+    var date = today.getFullYear() + '-' + (mm>9 ? '' : '0')+mm+ '-' + (dd>9 ? '' : '0')+dd;
+    
+    var hh = today.getHours();
+    var MM = today.getMinutes();
+    var ss = today.getSeconds();
+    var time = (hh>9 ? '' : '0')+hh+ ':' + (MM>9 ? '' : '0')+MM+ ':' + (ss>9 ? '' : '0')+ss;
+
+    var dateTime = date+' '+time;
+    console.log(dateTime);
+    return dateTime;
+}
 
 // 데이터베이스에 질문 추가
 function addQue(e) {
@@ -981,7 +1075,9 @@ function addQue(e) {
     var ans1 = document.getElementById("newAns1").value;
     var ans2 = document.getElementById("newAns2").value;
 
-    console.log(que, ans1, ans2);
+    var dateTime = getDateTime();
+    var currDate = Date.now();
+
     database.ref("questions").push().set({
         question: que,
         answer_1: ans1,
@@ -991,8 +1087,17 @@ function addQue(e) {
         state: "active",
         views: 0,
         skips: 0,
-        reports: 0
+        reports: 0,
+        hot: 0,
+        date: dateTime,
+        lastChange: currDate
     })
+
+    alert("성공적으로 질문이 등록됐습니다!")
+
+    document.getElementById("newQue").value = "";
+    document.getElementById("newAns1").value = "";
+    document.getElementById("newAns2").value = "";
 }
 
 
@@ -1002,6 +1107,9 @@ addQueBtn.addEventListener('click', function() {
 });
 
 // 새로운 질문 등록
-newQueSubmitBtn.addEventListener('click', addQue);
+newQueSubmitBtn.addEventListener('click', function(e) {
+    addQue(e);
+    toggleAddQueModal("hide");
+});
 
 
