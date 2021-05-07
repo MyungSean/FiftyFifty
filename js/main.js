@@ -17,11 +17,16 @@ list_area = document.getElementsByClassName("list_area")[0];
 startBtn = document.getElementById("startBtn");
 matchBtn = document.getElementById("matchBtn");
 
+selectTotQue = document.getElementById("selectTotQue");
+
 // 매치모드일 때 환경 변경
 function startMatchMode() {
     // 매치 버튼 표시
     startBtn.style.display = "none";
     matchBtn.style.display = "block";
+
+    // 질문 갯수 선택 미표시
+    selectTotQue.closest("form").style.display = "none";
 }
 
 // URL 파라미터에서 세트 정보 확인하기
@@ -376,7 +381,7 @@ showResultBtn = document.getElementById("showResultBtn");
 
 // 질문 아이디 리스트 만들기
 function makeIdList() {
-    return database.ref('questions').orderByChild('views').once('value').then(function(snapshot) {
+    return database.ref('questions').orderByChild('views').limitToLast(50).once('value').then(function(snapshot) {
         
         var idList = [];
         snapshot.forEach(function(childSnapshot) {
@@ -480,7 +485,14 @@ function nextQue() {
 
 // 전체 질문 개수 설정
 function setTotQue() {
-    var totQue = document.getElementById("selectTotQue").value;
+    if ( typeof(targetSet) == "undefined" ) {
+        // 매치 게임 아닐 때
+        var totQue = selectTotQue.value;
+    } else {
+        // 매치 게임일 때
+        var totQue = Object.keys(targetSet).length;
+    }
+
     document.getElementById("totQue").innerHTML = totQue;
 }
 
@@ -523,7 +535,8 @@ function currQueCnt() {
 function showGameResult() {
     // 이름 표시
     userName = document.getElementById("putNameModal").getElementsByTagName("input")[0].value;
-    document.getElementById("userName").innerHTML = userName;
+    document.getElementsByClassName("userName")[0].innerHTML = userName; // 대중도
+    document.getElementsByClassName("userName")[1].innerHTML = userName; // 친구 일치도
 
     var totPercent = 0;
 
@@ -570,7 +583,7 @@ function showGameResult() {
                     var avgPercent = totPercent / dictLength;
                     document.getElementById("avgPercent").innerHTML = Math.round(avgPercent);
 
-                    showPercent(avgPercent);
+                    showPercent(Math.round(avgPercent));
                 }
             })
         })
@@ -733,7 +746,12 @@ detailResultBtn.addEventListener("click", function() {
     $('#resultTable tr').slideToggle();
 })
 
-moveTo("result");
+// 게임 다시 하기 버튼 클릭
+$('.tryAgainBtn').click(function() {
+    history.pushState('intro', 'intro', './');
+    moveTo("intro");
+})
+// moveTo("result");
 
 
 // =================소셜 공유(사이트)=================
@@ -866,16 +884,19 @@ function kakaoResultShare() {
 
 // 클립보드에 링크 복사
 function copyLink() {
+    var shareContent = document.getElementsByClassName("shareContent")[0];
     var url = shareUrl.value;
     var description = shareDescription.value;
     var createInput = document.createElement("textarea");
     
-    document.getElementsByClassName("shareContent")[0].appendChild(createInput);
+    shareContent.style.display = 'block';
+    shareContent.appendChild(createInput);
     createInput.value = `${url}\n${description}`;
     
     createInput.select();
     document.execCommand('copy');
-    document.getElementsByClassName("shareContent")[0].removeChild(createInput);
+    shareContent.removeChild(createInput);
+    shareContent.style.display = 'none';
     
     alert('링크가 복사되었습니다.');
 }
