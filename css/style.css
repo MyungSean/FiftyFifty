@@ -96,18 +96,52 @@ input {
 .shareSite img {
     width: 50px;
     border-radius: 50%;
+    cursor: pointer;
+}
+
+
+.intro_area form {
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+.intro_area form select {
+    border: none;
+    border-bottom: 1px solid var(--sub-color);
+    outline: none;
+    padding: 5px;
+    margin-right: 3px;
+    font-size: 15px;
+}
+
+.intro_area .filter19_wrap {
+    justify-content: center;
+}
+.intro_area .filter19_wrap label:first-child {
+    margin-right: 5px;
 }
 
 .startGameBtn {
     display: none;
-    border: 1px solid #000;  
-    padding: 10px;
-    margin-bottom: 10px;
+    border-radius: 50px;
+    width: 100%;
+    padding: 10px 20px;
+    margin: auto;
+    margin-bottom: 15px;
+    
+    background-color: var(--main-color);
+    box-shadow: 0px 3px 5px 0px rgba(138, 83, 0, 0.5);
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: bold;
     cursor: pointer;
 }
 
 #matchBtn {
     display: none;
+}
+
+.showListBtn {
+    cursor: pointer;
 }
 
 
@@ -367,7 +401,8 @@ input {
 
 /* 친구에게 공유 */
 .shareResult {
-    padding: 50px 20px;
+    padding: 30px 20px;
+    font-size: 22px;
     font-family: 'Nanum Pen Script', cursive;
 }
 
@@ -504,10 +539,16 @@ input {
 }
 
 
-.sortBy {
+.filters {
+    display: flex;
+    flex-flow: row nowrap;
     padding: 10px 20px;
-    padding-bottom: 0;
     margin-top: var(--header-height);
+    font-size: 16px;
+}
+
+.sortBy {
+    padding-bottom: 0;
 }
 .sortBy span {
     margin-right: 8px;
@@ -519,10 +560,21 @@ input {
     font-weight: bold;
 }
 
+.show19_wrap {
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+.show19_wrap > span {
+    margin-right: 10px;
+    color: #585858;
+}
+
 
 #queList {
     list-style: none;
     margin: 15px;
+    margin-top: 0;
     padding: 0;
     text-align: center;
 }
@@ -537,6 +589,9 @@ input {
     flex-flow: column;
     padding: 10px;
     margin-bottom: 15px;
+}
+#queList li.forAdult {
+    display: none;
 }
 
 #queList .que {
@@ -639,15 +694,17 @@ input {
 }
 
 .modal-content button {
+    display: block;
     padding: 5px 12px;
     border: none;
     border-radius: 5px;
     background-color: var(--main-color);
     color: #ffffff;
     font-size: 14px;
+    cursor: pointer;
 }
 
-.modal-content label {
+.modal-content div label:first-child {
     display: inline-block;
     width: 45px;
     font-size: 14px;
@@ -665,6 +722,64 @@ input {
     border-bottom: 1px solid var(--main-color);
 }
 
+
+/* 토글 스위치 */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 54px;
+    height: 28px;
+}
+.switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: var(--sub-color);
+}
+input:focus + .slider {
+    box-shadow: 0 0 1px var(--sub-color);
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+.slider.round:before {
+    border-radius: 50%;
+}
+
+
 .modal-content .closeModalBtn {
     position: absolute;
     top: 10px;
@@ -672,10 +787,24 @@ input {
     font-size: 25px;
 }
 
+
 /* 질문 추가 모달 */
 /* #addQueModal {
     display: block;
 } */
+.filter19_wrap {
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.filter19_wrap label[for="filter19"] {
+    width: inherit !important;
+    margin-right: 10px;
+}
+.filter19_wrap label:nth-child(2) {
+    /* width: 60px; */
+}
 
 /* 이름 입력 모달 */
 /* #putNameModal {

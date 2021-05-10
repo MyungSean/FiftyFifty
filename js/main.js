@@ -14,10 +14,12 @@ game_area = document.getElementsByClassName("game_area")[0];
 result_area = document.getElementsByClassName("result_area")[0];
 list_area = document.getElementsByClassName("list_area")[0];
 
+selectTotQue = document.getElementById("selectTotQue");
+game19 = document.getElementById('game19')
+
 startBtn = document.getElementById("startBtn");
 matchBtn = document.getElementById("matchBtn");
 
-selectTotQue = document.getElementById("selectTotQue");
 
 // 매치모드일 때 환경 변경
 function startMatchMode() {
@@ -27,6 +29,12 @@ function startMatchMode() {
 
     // 질문 갯수 선택 미표시
     selectTotQue.closest("form").style.display = "none";
+
+    // 19금 필터 미표시
+    game19.closest("div").style.display = "none";
+
+    // 게임 시작 버튼에 매치 대상의 이름 표시
+    matchBtn.getElementsByTagName("span")[0].innerHTML = targetName;
 }
 
 // URL 파라미터에서 세트 정보 확인하기
@@ -246,6 +254,11 @@ function prependQue(queId) {
         
         var list = document.createElement("li");
         list.setAttribute("id", queId);
+
+        var filter19 = snapshot.val().filter19;
+        if ( filter19 ) {
+            list.setAttribute("class", "forAdult");
+        }
         
         var html = "";
         var html = '<span class="viewsBox">조회수: <span class="views">' + views.toString() + '</span></span>' +
@@ -257,6 +270,11 @@ function prependQue(queId) {
         
         list.innerHTML = html;
         document.getElementById('queList').prepend(list);
+
+        // 19금 필터 꺼져있을 때 19금 질문 표시
+        if ( !show19.checked ) {
+            $(".forAdult").show();
+        }
         
     })
 }
@@ -308,7 +326,6 @@ function searchByAns(ans) {
     })
 }
 
-
 // 댓글 열기 버튼 추가
 function addCommentBtn(queId) {
     var queLi = document.getElementById(queId);
@@ -333,7 +350,8 @@ function showQueList(sortBy) {
             prependQue(queId);
     
         });
-     
+
+        
     })
 }
 
@@ -383,6 +401,7 @@ $('.showListBtn').click(function() {
 
 // 질문 리스트 닫기
 $('.closeListBtn').click(function() {
+    history.pushState('intro', 'intro', './');
     moveTo("intro");
 })
 
@@ -425,6 +444,17 @@ sortByBtn[2].addEventListener("click", function() {
     sortByBtn[2].classList.add("select");
 })
 
+// 19금 질문 필터
+show19 = document.getElementById('show19')
+show19.addEventListener('change', (e) => {
+  if (e.currentTarget.checked) {
+    alert('19금 질문이 표시되지 않습니다.');
+    $(".forAdult").slideUp();
+} else {
+    alert('모든 질문이 표시됩니다.');
+    $(".forAdult").slideDown();
+  }
+})
 
 // 댓글 보기
 $(document).on("click", ".openCommentBtn", function() {
@@ -457,7 +487,7 @@ showResultBtn = document.getElementById("showResultBtn");
 
 // 질문 아이디 리스트 만들기
 function makeIdList() {
-    return database.ref('questions').orderByChild('views').limitToLast(50).once('value').then(function(snapshot) {
+    return database.ref('questions').orderByChild('hot').limitToLast(100).once('value').then(function(snapshot) {
         
         var idList = [];
         snapshot.forEach(function(childSnapshot) {
@@ -494,10 +524,19 @@ function nextQue() {
                 game_area = document.getElementsByClassName("game_area")[0];
     
                 // 활성화된 질문만 보여주기
-                state = snapshot.val().state;
+                var state = snapshot.val().state;
                 if ( state !== "active" ) {
                     nextQue();
                     return;
+                }
+
+                // 19금 질문 필터링
+                var filter19 = snapshot.val().filter19;
+                if ( game19.checked ) {
+                    if ( filter19 == true ) {
+                        nextQue();
+                        return;
+                    }                    
                 }
                 
                 que = snapshot.val().question;
@@ -678,6 +717,14 @@ function gameSetting() {
     moveTo("game");
 }
 
+// 19금 질문 필터
+game19.addEventListener('change', (e) => {
+  if (e.currentTarget.checked) {
+    alert('19금 질문이 표시되지 않습니다.');
+} else {
+    alert('모든 질문이 표시됩니다.');
+  }
+})
 
 // 시작 버튼 클릭
 startBtn.addEventListener('click', e => {
@@ -1048,6 +1095,14 @@ $('.closeModalBtn').click(function(e) {
     $(this).closest('.modal').hide();
 })
 
+// 19금 질문 필터
+filter19 = document.getElementById('filter19')
+filter19.addEventListener('change', (e) => {
+    if (e.currentTarget.checked) {
+        alert('19금 질문으로 등록합니다.');
+    }
+})
+
 // 날짜와 시간 반환
 function getDateTime() {
     
@@ -1063,7 +1118,6 @@ function getDateTime() {
     var time = (hh>9 ? '' : '0')+hh+ ':' + (MM>9 ? '' : '0')+MM+ ':' + (ss>9 ? '' : '0')+ss;
 
     var dateTime = date+' '+time;
-    console.log(dateTime);
     return dateTime;
 }
 
@@ -1075,6 +1129,8 @@ function addQue(e) {
     var ans1 = document.getElementById("newAns1").value;
     var ans2 = document.getElementById("newAns2").value;
 
+    var filter19 = document.getElementById("filter19").checked;
+
     var dateTime = getDateTime();
     var currDate = Date.now();
 
@@ -1085,6 +1141,7 @@ function addQue(e) {
         select_1: 0,
         select_2: 0,
         state: "active",
+        filter19: filter19,
         views: 0,
         skips: 0,
         reports: 0,

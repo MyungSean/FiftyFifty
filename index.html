@@ -24,18 +24,27 @@
                 <h1>Fifty Fifty</h1>
             </div>
             <div class="handling_div">
-                <div class="startGameBtn" id="startBtn">start</div>
-                <div class="startGameBtn" id="matchBtn">친구와 매치</div>
                 <form>
-                    <select id="selectTotQue">
-                        <option value="2" selected>2</option>
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="15">15</option>
-                        <option value="20">20</option>
-                    </select>
                     <span>질문</span>
+                    <select id="selectTotQue">
+                        <option value="2" selected>2개</option>
+                        <option value="5">5개</option>
+                        <option value="10">10개</option>
+                        <option value="15">15개</option>
+                        <option value="20">20개</option>
+                    </select>
                 </form>
+                <div class="filter19_wrap">
+                    <label for="game19">19금 필터</label>
+                    <label class="switch">
+                        <input type="checkbox" id="game19" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
+                <div class="startGameBtn" id="startBtn">시작하기</div>
+                <div class="startGameBtn" id="matchBtn"><span></span>님과 일치도 확인</div>
+
                 <div class="showListBtn">리스트 보기</div>
     
                 <div class="shareSite">
@@ -174,10 +183,20 @@
             <i class="ri-add-line" id="addQueBtn"></i>
         </div>
             
-        <div class="sortBy">
-            <span class="select">인기순</span>
-            <span>조회순</span>
-            <span>최신순</span>
+        <div class="filters">
+            <div class="sortBy">
+                <span class="select">인기순</span>
+                <span>조회순</span>
+                <span>최신순</span>
+            </div>
+            
+            <div class="show19_wrap">
+                <span>19금 필터</span>                
+                <label class="switch">
+                    <input type="checkbox" id="show19" checked>
+                    <span class="slider round"></span>
+                </label>
+            </div>
         </div>
 
         <ul id="queList"></ul>
@@ -202,6 +221,15 @@
                     <label for="newAns2">선택2</label>
                     <input type="text" id="newAns2" placeholder="찍먹" maxlength="30">
                 </div>
+                
+                <div class="filter19_wrap">
+                    <label for="filter19">19금 질문</label>
+                    <label class="switch">
+                        <input type="checkbox" id="filter19">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
                 <button id="newQueSubmitBtn">등록</button>
             </form>
             <!-- <div>
