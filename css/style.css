@@ -700,7 +700,7 @@ input {
 }
 
 .modal-content button {
-    display: block;
+    /* display: block; */
     padding: 5px 12px;
     border: none;
     border-radius: 5px;
@@ -807,9 +807,6 @@ input:checked + .slider:before {
 .filter19_wrap label[for="filter19"] {
     width: inherit !important;
     margin-right: 10px;
-}
-.filter19_wrap label:nth-child(2) {
-    /* width: 60px; */
 }
 
 /* 이름 입력 모달 */

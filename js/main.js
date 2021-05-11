@@ -1022,7 +1022,7 @@ function kakaoResultShare() {
 // 페이스북 공유
 function facebookResultShare() {
     var url = shareUrl.value;
-    window.open(url, "공유", "height=500,width=500");
+    window.open("http://www.facebook.com/sharer/sharer.php?u=" + url, "공유", "height=500,width=500");
 }  
 
 // 클립보드에 링크 복사
