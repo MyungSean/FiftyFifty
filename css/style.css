@@ -85,7 +85,7 @@ input {
 }
 
 .intro_area .handling_div {
-    padding: 40px;
+    padding: 20px;
 }
 
 .shareSite button {
@@ -108,6 +108,7 @@ input {
     border: none;
     border-bottom: 1px solid var(--sub-color);
     outline: none;
+    background-color: #ffffff;
     padding: 5px;
     margin-right: 3px;
     font-size: 15px;
@@ -544,6 +545,7 @@ input {
     flex-flow: row nowrap;
     padding: 10px 20px;
     margin-top: var(--header-height);
+    color: #797979;
     font-size: 16px;
 }
 
@@ -552,12 +554,16 @@ input {
 }
 .sortBy span {
     margin-right: 8px;
-    color: #797979;
     cursor: pointer;
 }
 .sortBy span.select {
     color: var(--main-color);
     font-weight: bold;
+}
+
+#showAllQue {
+    display: none;
+    cursor: pointer;
 }
 
 .show19_wrap {

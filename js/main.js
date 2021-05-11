@@ -411,6 +411,9 @@ document.getElementById("searchQueBtn").addEventListener("click", function(e) {
 
     document.getElementById("queList").innerHTML = "";
 
+    document.getElementsByClassName("sortBy")[0].style.display = "none";
+    document.getElementById("showAllQue").style.display = "block";
+
     var by = document.getElementById("by").value;
     var searchWord = document.getElementById("searchWord").value;
 
@@ -442,6 +445,16 @@ sortByBtn[2].addEventListener("click", function() {
     showQueList("date");
     $('.sortBy span').removeClass("select");
     sortByBtn[2].classList.add("select");
+})
+
+// 질문으로 돌아가기 클릭
+document.getElementById("showAllQue").addEventListener("click", function() {
+    document.getElementsByClassName("sortBy")[0].style.display = "block";
+    document.getElementById("showAllQue").style.display = "none";
+
+    showQueList("hot");
+    $('.sortBy span').removeClass("select");
+    sortByBtn[0].classList.add("select");
 })
 
 // 19금 질문 필터
@@ -907,6 +920,9 @@ function kakaoSiteShare() {
 }
 
 // 페이스북 공유
+function facebookSiteShare() {  
+    window.open("http://www.facebook.com/sharer/sharer.php?u=" + window.location.href, "공유", "height=500,width=500");
+}  
 
 // 링크 복사
 function siteLinkCopy() {
@@ -926,7 +942,7 @@ function siteLinkCopy() {
 
 
 siteShareBtns[0].addEventListener("click", kakaoSiteShare);
-// siteShareBtns[1].addEventListener("click", facebookSiteShare);
+siteShareBtns[1].addEventListener("click", facebookSiteShare);
 
 // 기타 방식으로 공유
 siteShareBtns[2].addEventListener("click", function() {
@@ -1004,6 +1020,10 @@ function kakaoResultShare() {
 }
 
 // 페이스북 공유
+function facebookResultShare() {
+    var url = shareUrl.value;
+    window.open(url, "공유", "height=500,width=500");
+}  
 
 // 클립보드에 링크 복사
 function copyLink() {
@@ -1031,7 +1051,7 @@ $('.shareBtn').click(function() {
 })
 
 resultShareBtns[0].addEventListener("click", kakaoResultShare);
-// resultShareBtns[1].addEventListener("click", facebookResultShare);
+resultShareBtns[1].addEventListener("click", facebookResultShare);
 
 // 기타 방식으로 공유
 resultShareBtns[2].addEventListener("click", function() {
